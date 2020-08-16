@@ -6,21 +6,30 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class TraditionalScoringEngineServiceImpl implements ScoringEngineService {
-    private final ScoringParameters scoringParameters;
+    private final ScoringConfiguration scoringConfiguration;
 
     public TraditionalScoringEngineServiceImpl() {
-        this.scoringParameters = new ScoringParameters(
+        this.scoringConfiguration = new ScoringConfiguration(
             300,
             10,
-            10
+            10,
+            1,
+            10,
+            "\t",
+            2
         );
     }
 
     @Override
     public GameResult validateResultData(List<String> result) {
+        result.stream().map(line -> {
+            Scanner scanner = new Scanner(line).useDelimiter(this.scoringConfiguration.getColumnsSeparator());
+            return null;
+        });
         // TODO: Validar el contenido del archivo y generar datos estructurados
         return null;
     }
@@ -39,7 +48,7 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
     }
 
     @Override
-    public ScoringParameters getScoringParameters() {
-        return this.scoringParameters;
+    public ScoringConfiguration getScoringConfiguration() {
+        return this.scoringConfiguration;
     }
 }
