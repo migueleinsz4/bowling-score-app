@@ -1,13 +1,13 @@
-package com.jobsity.challenge.bowling;
+package com.jobsity.challenge.bowling.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BowlingScoreAppApplication {
+public class BowlingScoreApp {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BowlingScoreAppApplication.class, args);
+		SpringApplication.run(BowlingScoreApp.class, args);
 	}
 
 }

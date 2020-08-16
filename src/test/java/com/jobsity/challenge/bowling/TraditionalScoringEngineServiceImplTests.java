@@ -1,24 +1,22 @@
 package com.jobsity.challenge.bowling;
 
 import com.jobsity.challenge.bowling.model.*;
-import com.jobsity.challenge.bowling.service.scoring.ScoringEngineService;
-import com.jobsity.challenge.bowling.service.scoring.TraditionalScoringEngineServiceImpl;
+import com.jobsity.challenge.bowling.service.scoringengine.ScoringEngineService;
+import com.jobsity.challenge.bowling.service.scoringengine.TraditionalScoringEngineServiceImpl;
 import lombok.extern.apachecommons.CommonsLog;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringBootTest
 @CommonsLog
 public class TraditionalScoringEngineServiceImplTests {
     ScoringEngineService scoringEngineService = new TraditionalScoringEngineServiceImpl();
 
     @Test
-    void processResultDataGeneralCase01() {
+    void processResultDataGeneralValidCase01() {
         PlayerScore<Frame> jonScore = new PlayerScore<>(
             new Player("Jon"),
             Arrays.asList(
@@ -56,7 +54,7 @@ public class TraditionalScoringEngineServiceImplTests {
             sansaScore
         );
 
-        GameScore gameScoreExpected = new GameScore(
+        GameScore expectedGameScore = new GameScore(
             LocalDateTime.now(),
             "test.txt",
             playersScores,
@@ -100,10 +98,10 @@ public class TraditionalScoringEngineServiceImplTests {
             Arrays.asList(jonResult, sansaResult)
         );
 
-        GameScore gameScore = this.scoringEngineService.processResultData(gameResult);
+        GameScore actualGameScore = this.scoringEngineService.processResultData(gameResult);
 
-       assertEquals(gameScoreExpected.getFileName(), gameScore.getFileName());
-       assertEquals(gameScoreExpected.getWinner(), gameScore.getWinner());
+       assertEquals(expectedGameScore.getFileName(), actualGameScore.getFileName());
+       assertEquals(expectedGameScore.getWinner(), actualGameScore.getWinner());
     }
 
     @Test
@@ -111,16 +109,16 @@ public class TraditionalScoringEngineServiceImplTests {
         log.info("My first test");
 
         GameResult gameResult = DataGeneratorUtils.generatePerfectResultDataOnePlayer("test.txt","Jon");
-        GameScore gameScoreExpected = DataGeneratorUtils.generatePerfectScoreDataOnePlayer("test.txt", "Jon");
+        GameScore expectedGameScore = DataGeneratorUtils.generatePerfectScoreDataOnePlayer("test.txt", "Jon");
 
-        GameScore gameScore = this.scoringEngineService.processResultData(gameResult);
+        GameScore actualGameScore = this.scoringEngineService.processResultData(gameResult);
 
-        assertEquals(gameScoreExpected.getFileName(), gameScore.getFileName());
-        assertEquals(gameScoreExpected.getWinner(), gameScore.getWinner());
-        assertEquals(gameScoreExpected.getScores().size(), gameScore.getScores().size());
+        assertEquals(expectedGameScore.getFileName(), actualGameScore.getFileName());
+        assertEquals(expectedGameScore.getWinner(), actualGameScore.getWinner());
+        assertEquals(expectedGameScore.getScores().size(), actualGameScore.getScores().size());
 
-        for (int i = 0; i < gameScore.getScores().size(); i++) {
-            assertEquals(gameScoreExpected.getScores().get(i), gameScore.getScores().get(i));
+        for (int i = 0; i < actualGameScore.getScores().size(); i++) {
+            assertEquals(expectedGameScore.getScores().get(i), actualGameScore.getScores().get(i));
         }
     }
 
