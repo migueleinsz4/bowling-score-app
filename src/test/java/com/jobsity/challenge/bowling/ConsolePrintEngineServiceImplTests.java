@@ -14,13 +14,19 @@ public class ConsolePrintEngineServiceImplTests {
 
     @Test
     void printGeneralValidCase01() {
-        GameScore gameScore = new GameScore(
-            LocalDateTime.now(),
-            "test.txt",
-            null,
-            null
-        );
+        GameScore gameScore = DataGeneratorUtils.generatePerfectScoreDataOnePlayer("test.txt", "Jon");
+        this.printEngineService.print(gameScore);
+    }
 
+    @Test
+    void printGeneralValidCase02() {
+        GameScore gameScore = DataGeneratorUtils.generateScoreDataOnePlayer("test.txt", "Jon");
+        this.printEngineService.print(gameScore);
+    }
+
+    @Test
+    void printGeneralValidCase03() {
+        GameScore gameScore = DataGeneratorUtils.generateScoreDataTwoPlayers("test.txt", "Jon","Sansa");
         this.printEngineService.print(gameScore);
     }
 
