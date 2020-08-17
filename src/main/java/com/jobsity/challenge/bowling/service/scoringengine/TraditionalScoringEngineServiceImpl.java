@@ -3,21 +3,25 @@ package com.jobsity.challenge.bowling.service.scoringengine;
 import com.jobsity.challenge.bowling.exception.InvalidFormatException;
 import com.jobsity.challenge.bowling.model.*;
 import lombok.Getter;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
+@CommonsLog
 public class TraditionalScoringEngineServiceImpl implements ScoringEngineService {
     private final ScoringConfiguration scoringConfiguration;
 
     public TraditionalScoringEngineServiceImpl() {
         this.scoringConfiguration = new ScoringConfiguration(
+            "Traditional Scoring",
             300,
             0,
             10,
@@ -26,7 +30,10 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
             1,
             10,
             "\\t",
-            2
+            2,
+            Pattern.compile("[a-zA-Z]+"),
+            Pattern.compile("10|[0-9|F]"),
+            "F"
         );
     }
 
@@ -37,21 +44,28 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
         if (result == null || result.isEmpty()) throw new InvalidFormatException("No data");
 
         List<PlayerRoll> playersRollsList = result.stream().map(line -> {
+            log.debug("LINE READ: " + line);
+
             String[] columns = line.split(this.scoringConfiguration.getColumnsSeparator());
 
             if (columns.length != this.scoringConfiguration.getColumnsNumber()) throw new InvalidFormatException("Invalid number of columns");
 
-            if (columns[0].isEmpty()) throw new InvalidFormatException("Invalid name of player");
-
             String playerName = columns[0].trim();
 
-            int rollScore;
+            Matcher nameMatcher = this.scoringConfiguration.getNameColumnPattern().matcher(playerName);
 
-            try {
-                rollScore = Integer.parseInt(columns[1]);
-            } catch (NumberFormatException e) {
-                throw new InvalidFormatException("Invalid score format (not a number)");
-            }
+            if (playerName.isEmpty() || !nameMatcher.find()) throw new InvalidFormatException("Invalid name of player");
+
+            String rollScoreText = columns[1].trim();
+
+            Matcher rollScoreMatcher = this.scoringConfiguration.getRollScoreColumnPattern().matcher(rollScoreText);
+
+            if (!rollScoreMatcher.find()) throw new InvalidFormatException("Invalid score format (not a number or Fail Symbol)");
+
+            int rollScore = this.scoringConfiguration.getFailSymbol().equals(rollScoreText) ? 0 : Integer.parseInt(rollScoreText);
+
+            log.debug("PLAYER NAME: " + playerName);
+            log.debug("ROLL SCORE: " + rollScore);
 
             return new PlayerRoll(playerName, rollScore);
         }).collect(Collectors.toList());
@@ -66,7 +80,7 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
         if (numberOfPlayers == 1) { // One Player
             if (playersRollsList.size() != this.scoringConfiguration.getMaxRollsPerPlayer()
                     && playersRollsList.size() != this.scoringConfiguration.getMaxRollsPerPlayer() - 1) {
-                throw new InvalidFormatException("Invalid number of rolls");
+                throw new InvalidFormatException("Invalid number of rolls for player " + playersRollsList.get(0).getName());
             }
 
             playersRollsList.forEach(playerRoll -> {
@@ -78,6 +92,24 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
 
             return this.createGameResult(playersRollsMap);
         } else { // Many Players
+            playersRollsMap.forEach((name, playerRolls) -> {
+                if (playerRolls.size() != this.scoringConfiguration.getMaxRollsPerPlayer()
+                    && playerRolls.size() != this.scoringConfiguration.getMaxRollsPerPlayer() - 1) {
+                    throw new InvalidFormatException("Invalid number of rolls for player: " + playerRolls.get(0).getName());
+                }
+
+                playerRolls.forEach(playerRoll -> {
+                    if (playerRoll.getRollScore() < this.scoringConfiguration.getMinRollScore() ||
+                        playerRoll.getRollScore() > this.scoringConfiguration.getMaxRollScore()) {
+                        throw new InvalidFormatException("Invalid roll score");
+                    }
+                });
+            });
+
+
+            //IntStream
+             //   .range(0, playersRollsList.size())
+             //   .mapToObj()
 
         }
 
@@ -96,7 +128,8 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
             LocalDateTime.now(),
             "test.txt",
             new ArrayList<PlayerScore<Frame>>(),
-            ""
+            "",
+            null
         );
 
         return gameScore;
