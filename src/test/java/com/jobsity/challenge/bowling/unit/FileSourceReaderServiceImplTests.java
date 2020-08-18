@@ -1,4 +1,4 @@
-package com.jobsity.challenge.bowling;
+package com.jobsity.challenge.bowling.unit;
 
 import com.jobsity.challenge.bowling.service.sourcereader.FileSourceReaderServiceImpl;
 import com.jobsity.challenge.bowling.service.sourcereader.SourceReaderService;
@@ -16,19 +16,21 @@ public class FileSourceReaderServiceImplTests {
     @Test
     void readSourceValidFile() {
         List<String> expectedResult = Arrays.asList(
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10",
-            "Carl   10"
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0",
+            "Jon\t0"
         );
 
-        List<String> actualResult = this.sourceReaderService.readSource("test.txt");
+        List<String> actualResult = this.sourceReaderService.readSource("test01.txt", true);
+
+        actualResult.forEach(log::info);
 
         assertEquals(expectedResult, actualResult);
     }

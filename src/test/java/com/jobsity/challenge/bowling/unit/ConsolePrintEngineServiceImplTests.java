@@ -1,4 +1,4 @@
-package com.jobsity.challenge.bowling;
+package com.jobsity.challenge.bowling.unit;
 
 import com.jobsity.challenge.bowling.model.GameScore;
 import com.jobsity.challenge.bowling.service.printengine.ConsolePrintEngineServiceImpl;

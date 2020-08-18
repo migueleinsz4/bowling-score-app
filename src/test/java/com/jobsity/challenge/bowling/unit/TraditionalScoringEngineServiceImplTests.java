@@ -1,13 +1,14 @@
-package com.jobsity.challenge.bowling;
+package com.jobsity.challenge.bowling.unit;
 
 import com.jobsity.challenge.bowling.model.*;
 import com.jobsity.challenge.bowling.service.scoringengine.ScoringEngineService;
 import com.jobsity.challenge.bowling.service.scoringengine.TraditionalScoringEngineServiceImpl;
+import com.jobsity.challenge.bowling.util.TestsUtils;
 import lombok.extern.apachecommons.CommonsLog;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.jobsity.challenge.bowling.TestsUtils.logGameResult;
-import static com.jobsity.challenge.bowling.TestsUtils.logGameScore;
+import static com.jobsity.challenge.bowling.util.TestsUtils.logGameResult;
+import static com.jobsity.challenge.bowling.util.TestsUtils.logGameScore;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -160,6 +161,13 @@ public class TraditionalScoringEngineServiceImplTests {
     @Test
     void validateResultDataWorstPunctuationOnePlayerCase() {
         List<String> data = TestsUtils.generateWorstResultRawDataOnePlayer();
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-one-player.txt", data);
+        logGameResult(gameResult);
+    }
+
+    @Test
+    void validateResultDataOtherWorstPunctuationOnePlayerCase() {
+        List<String> data = TestsUtils.generateOtherWorstResultRawDataOnePlayer();
         GameResult gameResult = this.scoringEngineService.validateResultData("test-one-player.txt", data);
         logGameResult(gameResult);
     }

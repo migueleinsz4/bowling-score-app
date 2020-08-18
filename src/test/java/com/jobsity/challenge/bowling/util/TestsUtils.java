@@ -1,4 +1,4 @@
-package com.jobsity.challenge.bowling;
+package com.jobsity.challenge.bowling.util;
 
 import com.jobsity.challenge.bowling.model.*;
 import lombok.extern.apachecommons.CommonsLog;
@@ -31,6 +31,14 @@ public class TestsUtils {
         List<String> data = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
             data.add("Jeff\tF");
+        }
+        return data;
+    }
+
+    public static List<String> generateOtherWorstResultRawDataOnePlayer() {
+        List<String> data = new ArrayList<>();
+        for (int i = 1; i <= 20; i++) {
+            data.add("Jeff\t0");
         }
         return data;
     }
