@@ -14,14 +14,18 @@ public class ConsolePrintEngineServiceImpl implements PrintEngineService {
     public void print(GameScore gameScore) {
 
         System.out.println("***** Print test *****");
-        this.printConsoleTabSeparated(gameScore);
+        this.printConsoleScoreTabSeparated(gameScore);
     }
 
+    public void printConsoleError(String errorMessage) {
+        System.out.println("=== File Validation: Errors ===");
+        System.out.format("%100s", errorMessage);
+    }
 
-    public void printConsoleTabSeparated(GameScore gameScore) {
+    public void printConsoleScoreTabSeparated(GameScore gameScore) {
 
         String space="2";
-        //Integer maxFrames = 10;
+        Integer maxFramesPerPlayer = 10;
         Integer maxRollScore=10;
 
         String formatLabel ="%s\t\t";
@@ -43,9 +47,10 @@ public class ConsolePrintEngineServiceImpl implements PrintEngineService {
                     frame.getFirstRollScore()==maxRollScore && frame.getNumber()!=maxRollScore?"":
                             frame.getFirstRollScore()==maxRollScore && frame.getNumber()==maxRollScore?"X":
                             frame.getFirstRollScore(),
-                    frame.getFirstRollScore()==maxRollScore && frame.getNumber()!=maxRollScore?"X":
-                            frame.getFrameScore()==maxRollScore && frame.getFirstRollScore()!=maxRollScore?"/":
-                                    frame.getSecondRollScore()));
+                    frame.getFirstRollScore()==maxRollScore && frame.getNumber()!=maxFramesPerPlayer?"X":
+                            frame.getSecondRollScore()==maxRollScore && frame.getNumber()==maxFramesPerPlayer?"X":
+                                    frame.getFrameScore()==maxRollScore && frame.getFirstRollScore()!=maxRollScore?"/":
+                                            frame.getSecondRollScore()));
 
             thirdScore= Objects.requireNonNull(CollectionUtils.lastElement(playerScore.getFrames())).getThirdRollScore();
             if(thirdScore!=null)

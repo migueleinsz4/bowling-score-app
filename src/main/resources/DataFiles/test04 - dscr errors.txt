@@ -1,0 +1,37 @@
+Jon	10
+Sansa	0
+Sansa	11 (Wrong number out of the interval 0-10 or F)
+Jon	10
+Sansa	-1 (Wrong negative number)
+Sansa	6
+Jon	5
+Jon	5
+Sansa	F
+Sansa	5
+Jon	A (Wrong data, just F letter is accepted)
+Jon	9
+Sansa	10
+Jon	10
+Sansa	3
+Sansa	6
+Jon	8
+Jon	1
+Sansa	5
+Sansa	5
+Jon	2
+Jon	7
+Sansa	6
+Sansa	3
+Jon	8
+Jon	1
+Sansa	10
+Jon	9
+Jon	0
+Sansa	7
+Sansa	2
+Jon	10
+Jon	11 (Wrong number out of the interval 0-10 or F)
+Jon	-1 (Wrong negative number)
+Sansa	2
+Sansa	8
+Sansa	7
