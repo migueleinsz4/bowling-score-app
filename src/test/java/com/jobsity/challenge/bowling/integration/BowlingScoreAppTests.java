@@ -7,6 +7,7 @@ import com.jobsity.challenge.bowling.service.gamescore.GameScoreService;
 import com.jobsity.challenge.bowling.service.scoringengine.ScoringEngineService;
 import com.jobsity.challenge.bowling.util.TestsUtils;
 import lombok.extern.apachecommons.CommonsLog;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,6 +75,7 @@ public class BowlingScoreAppTests {
     }
 
     @Test
+    @DisplayName("Perfect Score")
     void processGameResultTest07File() {
         log.info("PRINT");
         GameScore gameScore = this.gameScoreService.processGameResult("test07.txt", true);
@@ -82,9 +84,19 @@ public class BowlingScoreAppTests {
     }
 
     @Test
+    @DisplayName("Fail Score")
     void processGameResultTest08File() {
         log.info("PRINT");
         GameScore gameScore = this.gameScoreService.processGameResult("test08.txt", true);
+        log.info("SCORE DETAILS");
+        TestsUtils.logGameScore(gameScore);
+    }
+
+    @Test
+    @DisplayName("Zero Score")
+    void processGameResultTest09File() {
+        log.info("PRINT");
+        GameScore gameScore = this.gameScoreService.processGameResult("test09.txt", true);
         log.info("SCORE DETAILS");
         TestsUtils.logGameScore(gameScore);
     }
