@@ -17,7 +17,8 @@ public class ConsolePrintEngineServiceImpl implements PrintEngineService {
         this.printConsoleScoreTabSeparated(gameScore);
     }
 
-    public void printConsoleError(String errorMessage) {
+    @Override
+    public void printError(String errorMessage) {
         System.out.println("=== File Validation: Errors ===");
         System.out.format("%100s", errorMessage);
     }

@@ -102,6 +102,15 @@ public class BowlingScoreAppTests {
     }
 
     @Test
+    @DisplayName("Challenge Example Score")
+    void processGameResultTest10File() {
+        log.info("PRINT");
+        GameScore gameScore = this.gameScoreService.processGameResult("test10.txt", true);
+        log.info("SCORE DETAILS");
+        TestsUtils.logGameScore(gameScore);
+    }
+
+    @Test
     void processResultDataPerfectPunctuationOnePlayerIntegrationCase() {
         List<String> data = TestsUtils.generatePerfectRawDataOnePlayer();
         GameResult gameResult = this.scoringEngineService.validateResultData("test-one-player.txt", data);

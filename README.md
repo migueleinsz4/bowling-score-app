@@ -20,8 +20,9 @@
 
 #####Features:
 
+* Read text files.  Two columns separated by tab.  Line breaks are ignored
 * General processing flow is to read result data, validate result data, calculate scores 
-and print scores
+and print scores 
 * Allows changing the Source of the data.  
 If in the future you want to use other data sources, 
 this is possible by creating another implementation of the SourceReaderService interface.
@@ -32,6 +33,11 @@ this is possible by creating another implementation of the ScoringEngineService 
 If in the future you want to use other printing mechanisms, 
 this is possible by creating another implementation of the PrintEngineService interface.
 * Easy evolution to REST API, adding layers of Controller, Repository, etc.
+* Unit and Integration tests
+
+#####Bonus:
+
+Use of Java 8 streams and lambdas
 
 #####Run:
 
