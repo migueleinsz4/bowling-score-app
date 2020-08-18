@@ -17,7 +17,7 @@ Sansa	3
 Sansa	6
 Jon	8
 Sansa	5
-Sansa 5
+Sansa	5
 Jon	2
 Jonn	7
 Sansa	6

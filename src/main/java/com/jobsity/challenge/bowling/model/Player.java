@@ -1,8 +1,10 @@
 package com.jobsity.challenge.bowling.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class Player {
     private final int number;
     private final String name;
