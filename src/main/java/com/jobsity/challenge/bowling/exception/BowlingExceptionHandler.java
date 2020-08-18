@@ -21,7 +21,5 @@ public class BowlingExceptionHandler {
     @AfterThrowing(pointcut="execution(* com.jobsity.challenge.bowling.service.gamescore.*.*(..))", throwing="ex")
     public void handleError(Exception ex) {
         this.printEngineService.printError(ex.getMessage());
-        log.debug("Error");
-        log.debug(ex.getMessage());
     }
 }
