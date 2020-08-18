@@ -18,7 +18,6 @@ public class ConsolePrintEngineServiceImplTests {
             LocalDateTime.now(),
             "test.txt",
             null,
-            null,
             null
         );
 

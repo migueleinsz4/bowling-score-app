@@ -33,7 +33,8 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
             2,
             Pattern.compile("[a-zA-Z]+"),
             Pattern.compile("10|[0-9|F]"),
-            "F"
+            "F",
+            -1
         );
     }
 
@@ -62,7 +63,7 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
 
             boolean isFail = this.scoringConfiguration.getFailSymbol().equals(rollScoreText);
 
-            int rollScore = isFail ? -1 : Integer.parseInt(rollScoreText);
+            int rollScore = isFail ? this.scoringConfiguration.getFailValue() : Integer.parseInt(rollScoreText);
 
             log.debug("PLAYER NAME: " + playerName);
             log.debug("ROLL SCORE: " + rollScore);
@@ -78,28 +79,10 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
         if (numberOfPlayers < this.scoringConfiguration.getMinPlayers() || numberOfPlayers > this.scoringConfiguration.getMaxPlayers())
             throw new InvalidFormatException("Invalid number of players");
 
-        /*
-        if (numberOfPlayers == 1) { // One Player
-            if (playersRollsList.size() != this.scoringConfiguration.getMaxRollsPerPlayer()
-                    && playersRollsList.size() != this.scoringConfiguration.getMaxRollsPerPlayer() - 1) {
-                throw new InvalidFormatException("Invalid number of rolls for player " + playersRollsList.get(0).getPlayerName());
-            }
-
-            playersRollsList.forEach(playerRoll -> {
-                if (playerRoll.getRollScore() < this.scoringConfiguration.getMinRollScore() ||
-                        playerRoll.getRollScore() > this.scoringConfiguration.getMaxRollScore()) {
-                    throw new InvalidFormatException("Invalid roll score");
-                }
-            });
-
-            return this.createGameResult(playersRollsMap);
-        } else {
-          */
-        // Many Players
         playersRollsMap.forEach((name, playerRolls) -> {
             if (playerRolls.size() < this.scoringConfiguration.getMinRollsPerPlayer()
                 || playerRolls.size() > this.scoringConfiguration.getMaxRollsPerPlayer()) {
-                throw new InvalidFormatException("Invalid number of rolls for player: " + playerRolls.get(0).getPlayerName());
+                throw new InvalidFormatException("Invalid number of rolls for player: " + name);
             }
 
             playerRolls.forEach(playerRoll -> {
@@ -134,10 +117,10 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
 
             boolean isLastFrame = playerFrames.get(actualPlayerName) != null && playerFrames.get(actualPlayerName).size() >= 9;
 
-            if (playerFrameScore > 10 && !isLastFrame) throw new InvalidFormatException("Invalid frame score");
+            if (playerFrameScore > this.scoringConfiguration.getMaxRollScore() && !isLastFrame) throw new InvalidFormatException("Invalid frame score");
 
             if (!isLastFrame) {
-                if (rollCount == 1 && actualRollScore == 10) {
+                if (rollCount == 1 && actualRollScore == this.scoringConfiguration.getMaxRollScore()) {
                     expectedPlayerName = playerIterator.next();
                     playerFrameScore = 0;
                     rollCount = 0;
@@ -147,11 +130,10 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
                     expectedPlayerName = playerIterator.next();
                     playerFrameScore = 0;
                     rollCount = 0;
-                    //this.updatePlayerFrames(actualPlayerName, actualRollScore, prev1.getRollScore(), null, playerFrames);
                     this.updatePlayerFrames(actualPlayerName, prev1.getRollScore(), actualRollScore, null, playerFrames);
                 }
             } else {
-                if (rollCount == 1 && actualRollScore == 10) {
+                if (rollCount == 1 && actualRollScore == this.scoringConfiguration.getMaxRollScore()) {
                     PlayerRoll next1 = playersRollsList.get(i + 1);
                     PlayerRoll next2 = playersRollsList.get(i + 2);
 
@@ -163,13 +145,12 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
                     playerFrameScore = 0;
                     rollCount = 0;
                     increment = 3;
-                } else if (rollCount == 2 && playerFrameScore == 10) {
+                } else if (rollCount == 2 && playerFrameScore == this.scoringConfiguration.getMaxRollScore()) {
                     PlayerRoll next1 = playersRollsList.get(i + 1);
                     PlayerRoll prev1 = playersRollsList.get(i - 1);
 
                     if (!actualPlayerName.equals(prev1.getPlayerName()) && !actualPlayerName.equals(next1.getPlayerName()) ) throw new InvalidFormatException("Invalid sequence on last frame");
 
-                    //this.updatePlayerFrames(actualPlayerName, actualRollScore, next1.getRollScore(), null, playerFrames);
                     this.updatePlayerFrames(actualPlayerName,  prev1.getRollScore(), actualRollScore, null, playerFrames);
 
                     expectedPlayerName = playerIterator.next();
@@ -190,7 +171,7 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
                 }
             }
 
-            if (playerFrames.get(actualPlayerName) != null && playerFrames.get(actualPlayerName).size() > 10) throw new InvalidFormatException("Invalid number of frames");
+            if (playerFrames.get(actualPlayerName) != null && playerFrames.get(actualPlayerName).size() > this.scoringConfiguration.getMaxFramesPerPlayer()) throw new InvalidFormatException("Invalid number of frames");
 
             i += increment;
         }
@@ -209,66 +190,6 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
                             entry.getValue()
                         )).collect(Collectors.toList())
         );
-    }
-
-    private List<Frame> calculateAggregatePlayerScore(List<BasicFrame> basicFrames) {
-        final Integer maxRollScore = this.scoringConfiguration.getMaxRollScore();
-        final int lastFrameIndex = this.scoringConfiguration.getMaxFramesPerPlayer() - 1;
-        final List<Frame> frames = new ArrayList<>();
-        Integer bonus;
-
-        for (int i = 0; i < basicFrames.size(); i++) {
-            BasicFrame basicFrame = basicFrames.get(i);
-            Integer frameScore = basicFrame.currentScore();
-            BasicFrame next1 = basicFrames.get(i + 1);
-            BasicFrame next2 = basicFrames.get(i + 2);
-            bonus = 0;
-
-            if (i < lastFrameIndex) {
-                if (basicFrame.getFrameType(maxRollScore).equals(FrameType.STRIKE)) {
-                    bonus += next1.getFirstRollScoreValue();
-
-                    if (next1.getFrameType(maxRollScore).equals(FrameType.STRIKE)) {
-                        bonus += next2.getFirstRollScoreValue();
-                    } else {
-                        bonus += next1.getSecondRollScoreValue();
-                    }
-                } else if (basicFrame.getFrameType(maxRollScore).equals(FrameType.SPARE)) {
-                    bonus += next1.getFirstRollScoreValue();
-                }
-
-                frames.add(
-                    new Frame(
-                        basicFrame.getNumber(),
-                        basicFrame.getFirstRollScoreValue(),
-                        basicFrame.getSecondRollScoreValue(),
-                        basicFrame.getThirdRollScoreValue(),
-                        frameScore,
-                        bonus,
-                        i == 0 ? frameScore + bonus : frameScore + bonus + frames.get(i - 1).getAggregateScore())
-                );
-            } else {
-                Integer previousAggregateScore = frames.get(i - 1).getAggregateScore();
-                if (basicFrame.getFrameType(maxRollScore).equals(FrameType.STRIKE)) {
-                    bonus = basicFrame.getSecondRollScoreValue() + basicFrame.getThirdRollScoreValue();
-                } else if (basicFrame.getFrameType(maxRollScore).equals(FrameType.SPARE)) {
-                    bonus = basicFrame.getThirdRollScoreValue();
-                }
-
-                frames.add(
-                    new Frame(
-                        basicFrame.getNumber(),
-                        basicFrame.getFirstRollScoreValue(),
-                        basicFrame.getSecondRollScoreValue(),
-                        basicFrame.getThirdRollScoreValue(),
-                        frameScore,
-                        bonus,
-                        frameScore + bonus + frames.get(i - 1).getAggregateScore())
-                );
-            }
-        }
-
-        return frames;
     }
 
     private void updatePlayerFrames(String playerName,
@@ -297,24 +218,85 @@ public class TraditionalScoringEngineServiceImpl implements ScoringEngineService
         }
     }
 
-
-    private GameResult createGameResult(Map<String, List<PlayerRoll>> playersRollsMap) {
-
-        return null;
-    }
-
     @Override
     public GameScore processResultData(GameResult gameResult) {
-        // TODO: Calcular los Scores con las reglas tradicionales
-        GameScore gameScore = new GameScore(
-            LocalDateTime.now(),
-            "test.txt",
-            new ArrayList<PlayerScore<Frame>>(),
-            "",
-            null
-        );
+        final Integer maxRollScore = this.scoringConfiguration.getMaxRollScore();
+        final int lastFrameIndex = this.scoringConfiguration.getMaxFramesPerPlayer() - 1;
+        final List<PlayerScore<Frame>> playersScores = new ArrayList<>();
+        List<Frame> frames;
+        Integer bonus;
 
-        return gameScore;
+        for (PlayerScore<BasicFrame> inputPlayerScore : gameResult.getResults()) {
+            List<BasicFrame> basicFrames = inputPlayerScore.getFrames();
+            frames = new ArrayList<>();
+
+            for (int i = 0; i < basicFrames.size(); i++) {
+                BasicFrame basicFrame = basicFrames.get(i);
+                Integer frameScore = basicFrame.currentScore();
+                bonus = 0;
+
+                if (i < lastFrameIndex) {
+                    BasicFrame next1 = basicFrames.get(i + 1);
+
+                    if (basicFrame.getFrameType(maxRollScore).equals(FrameType.STRIKE)) {
+                        bonus += next1.getFirstRollScoreValue();
+
+                        if (next1.getFrameType(maxRollScore).equals(FrameType.STRIKE) && (i < lastFrameIndex - 1)) {
+                            BasicFrame next2 = basicFrames.get(i + 2);
+                            bonus += next2.getFirstRollScoreValue();
+                        } else {
+                            bonus += next1.getSecondRollScoreValue();
+                        }
+                    } else if (basicFrame.getFrameType(maxRollScore).equals(FrameType.SPARE)) {
+                        bonus += next1.getFirstRollScoreValue();
+                    }
+
+                    frames.add(
+                        new Frame(
+                            basicFrame.getNumber(),
+                            basicFrame.getFirstRollScore(),
+                            basicFrame.getSecondRollScore(),
+                            basicFrame.getThirdRollScore(),
+                            frameScore,
+                            bonus,
+                            i == 0 ? frameScore + bonus : frameScore + bonus + frames.get(i - 1).getAggregateScore())
+                    );
+                } else {
+                    Integer previousAggregateScore = frames.get(i - 1).getAggregateScore();
+
+                    if (basicFrame.getFrameType(maxRollScore).equals(FrameType.STRIKE)) {
+                        bonus = basicFrame.getSecondRollScoreValue() + basicFrame.getThirdRollScoreValue();
+                    } else if (basicFrame.getFrameType(maxRollScore).equals(FrameType.SPARE)) {
+                        bonus = basicFrame.getThirdRollScoreValue();
+                    }
+
+                    frames.add(
+                        new Frame(
+                            basicFrame.getNumber(),
+                            basicFrame.getFirstRollScore(),
+                            basicFrame.getSecondRollScore(),
+                            basicFrame.getThirdRollScore(),
+                            frameScore - bonus,
+                            bonus,
+                            frameScore + previousAggregateScore)
+                    );
+                }
+            }
+
+            playersScores.add(
+                new PlayerScore<>(
+                    new Player(inputPlayerScore.getPlayer().getNumber(), inputPlayerScore.getPlayer().getName()),
+                    frames
+                )
+            );
+        }
+
+        return new GameScore(
+            LocalDateTime.now(),
+            gameResult.getFileName(),
+            playersScores,
+            this.scoringConfiguration
+        );
     }
 
     @Override

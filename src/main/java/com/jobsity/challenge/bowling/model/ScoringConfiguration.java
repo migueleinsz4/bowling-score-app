@@ -20,10 +20,11 @@ public class ScoringConfiguration {
     private final Pattern nameColumnPattern;
     private final Pattern rollScoreColumnPattern;
     private final String failSymbol;
+    private final Integer failValue;
 
     public ScoringConfiguration(String engineName, Integer maxGameScore, Integer minRollScore, Integer maxRollScore, Integer maxFramesPerPlayer,
                                 Integer minRollsPerPlayer, Integer maxRollsPerPlayer, Integer minPlayers, Integer maxPlayers, String columnsSeparator,
-                                Integer columnsNumber, Pattern nameColumnPattern, Pattern rollScoreColumnPattern, String failSymbol) {
+                                Integer columnsNumber, Pattern nameColumnPattern, Pattern rollScoreColumnPattern, String failSymbol, Integer failValue) {
         this.engineName = engineName;
         this.maxGameScore = maxGameScore;
         this.minRollScore = minRollScore;
@@ -38,5 +39,6 @@ public class ScoringConfiguration {
         this.nameColumnPattern = nameColumnPattern;
         this.rollScoreColumnPattern = rollScoreColumnPattern;
         this.failSymbol = failSymbol;
+        this.failValue = failValue;
     }
 }

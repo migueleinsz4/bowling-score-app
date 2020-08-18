@@ -1,7 +1,9 @@
 package com.jobsity.challenge.bowling.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Getter
 @EqualsAndHashCode
 public class BasicFrame {
     private final Integer number;
@@ -14,10 +16,6 @@ public class BasicFrame {
         this.firstRollScore = firstRollScore;
         this.secondRollScore = secondRollScore;
         this.thirdRollScore = thirdRollScore;
-    }
-
-    public Integer getNumber() {
-        return this.number;
     }
 
     public Integer getFirstRollScoreValue() {
@@ -81,7 +79,7 @@ public class BasicFrame {
     public FrameType getFrameType(Integer maxRollScore) {
         if (maxRollScore.equals(this.getFirstRollScoreValue())) {
             return FrameType.STRIKE;
-        } else if (maxRollScore.equals(this.getFirstRollScoreValue() + this.getFirstRollScoreValue())) {
+        } else if (maxRollScore.equals(this.getFirstRollScoreValue() + this.getSecondRollScoreValue())) {
             return FrameType.SPARE;
         } else {
             return FrameType.OPEN;
