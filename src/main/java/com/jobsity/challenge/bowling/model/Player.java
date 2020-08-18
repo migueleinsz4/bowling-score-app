@@ -1,14 +1,14 @@
 package com.jobsity.challenge.bowling.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class Player {
-    private String name;
+    private final int number;
+    private final String name;
 
-    public Player(String name) {
+    public Player(int number, String name) {
+        this.number = number;
         this.name = name;
     }
 }

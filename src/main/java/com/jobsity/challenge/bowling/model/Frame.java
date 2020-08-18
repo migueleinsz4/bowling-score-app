@@ -2,10 +2,8 @@ package com.jobsity.challenge.bowling.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 public class Frame extends BasicFrame {
     private final Integer frameScore;

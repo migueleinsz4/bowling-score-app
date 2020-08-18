@@ -7,7 +7,7 @@ import com.jobsity.challenge.bowling.model.ScoringConfiguration;
 import java.util.List;
 
 public interface ScoringEngineService {
-    GameResult validateResultData(List<String> result);
+    GameResult validateResultData(String filename, List<String> result);
     GameScore processResultData(GameResult gameResult);
     ScoringConfiguration getScoringConfiguration();
 }

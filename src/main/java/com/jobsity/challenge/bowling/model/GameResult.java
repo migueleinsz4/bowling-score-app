@@ -1,12 +1,10 @@
 package com.jobsity.challenge.bowling.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@Setter
 public class GameResult {
     private final String fileName;
     private final List<PlayerScore<BasicFrame>> results;

@@ -28,7 +28,7 @@ public class GameScoreServiceImpl implements GameScoreService {
     @Override
     public GameResult parseGameResultFile(String source) {
         List<String> fileContent = this.sourceReaderService.readSource(source);
-        return this.scoringEngineService.validateResultData(fileContent);
+        return this.scoringEngineService.validateResultData(source, fileContent);
     }
 
     @Override

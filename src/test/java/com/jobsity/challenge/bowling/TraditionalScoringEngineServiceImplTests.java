@@ -18,7 +18,7 @@ public class TraditionalScoringEngineServiceImplTests {
     @Test
     void processResultDataGeneralValidCase01() {
         PlayerScore<Frame> jonScore = new PlayerScore<>(
-            new Player("Jon"),
+            new Player(1, "Jon"),
             Arrays.asList(
                 new Frame(1, 10, null, null, 10, 8, 18),
                 new Frame(2, 10, null, null, 10, 8, 18),
@@ -34,7 +34,7 @@ public class TraditionalScoringEngineServiceImplTests {
         );
 
         PlayerScore<Frame> sansaScore = new PlayerScore<>(
-            new Player("Sansa"),
+            new Player(2, "Sansa"),
             Arrays.asList(
                 new Frame(1, 5, null, null, 10, 8, 18),
                 new Frame(2, 5, null, null, 10, 8, 18),
@@ -58,11 +58,12 @@ public class TraditionalScoringEngineServiceImplTests {
             LocalDateTime.now(),
             "test.txt",
             playersScores,
-            "Jon"
+            "Jon",
+            null
         );
 
         PlayerScore<BasicFrame> jonResult = new PlayerScore<>(
-            new Player("Jon"),
+            new Player(1, "Jon"),
             Arrays.asList(
                 new BasicFrame(1, 5, null, null),
                 new BasicFrame(2, 5, null, null),
@@ -78,7 +79,7 @@ public class TraditionalScoringEngineServiceImplTests {
         );
 
         PlayerScore<BasicFrame> sansaResult = new PlayerScore<>(
-            new Player("Sansa"),
+            new Player(2, "Sansa"),
             Arrays.asList(
                 new BasicFrame(1, 10, null, null),
                 new BasicFrame(2, 10, null, null),
@@ -105,7 +106,7 @@ public class TraditionalScoringEngineServiceImplTests {
     }
 
     @Test
-    void processResultDataPerfectPuntuationOnePlayerCase() {
+    void processResultDataPerfectPunctuationOnePlayerCase() {
         log.info("My first test");
 
         GameResult gameResult = DataGeneratorUtils.generatePerfectResultDataOnePlayer("test.txt","Jon");
@@ -120,6 +121,81 @@ public class TraditionalScoringEngineServiceImplTests {
         for (int i = 0; i < actualGameScore.getScores().size(); i++) {
             assertEquals(expectedGameScore.getScores().get(i), actualGameScore.getScores().get(i));
         }
+    }
+
+    @Test
+    void validateResultDataPerfectPunctuationOnePlayerCase() {
+        List<String> data = DataGeneratorUtils.generatePerfectRawDataOnePlayer();
+
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-one-player.txt", data);
+
+        this.logGameResult(gameResult);
+    }
+
+    @Test
+    void validateResultDataInvalidNumberOfFramesOnePlayerCase() {
+        List<String> data = DataGeneratorUtils.generateInvalidNumberOfFramesOnePlayer();
+
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-one-player.txt", data);
+
+        this.logGameResult(gameResult);
+    }
+
+    @Test
+    void validateResultDataWorstPunctuationOnePlayerCase() {
+        List<String> data = DataGeneratorUtils.generateWorstResultRawDataOnePlayer();
+
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-one-player.txt", data);
+
+        this.logGameResult(gameResult);
+    }
+
+    @Test
+    void validateResultDataWorstPunctuationTwoPlayerCase() {
+        List<String> data = DataGeneratorUtils.generateWorstResultRawDataTwoPlayers();
+
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-two-players.txt", data);
+
+        this.logGameResult(gameResult);
+    }
+
+    @Test
+    void validateResultDataInvalidOrderTwoPlayersCase() {
+        List<String> data = DataGeneratorUtils.generateInvalidOrderRawDataTwoPlayers();
+
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-two-players.txt", data);
+
+        this.logGameResult(gameResult);
+    }
+
+    @Test
+    void validateResultDataPerfectPunctuationTwoPlayersCase() {
+        List<String> data = DataGeneratorUtils.generatePerfectRawDataTwoPlayers();
+
+        GameResult gameResult = this.scoringEngineService.validateResultData("test-two-players.txt", data);
+
+        this.logGameResult(gameResult);
+    }
+
+
+    private void logGameResult(GameResult gameResult) {
+        log.info("Filename: " + gameResult.getFileName());
+        log.info("Results:");
+
+        List<PlayerScore<BasicFrame>> results = gameResult.getResults();
+
+        results.forEach(playerScore -> {
+            log.info("Player Name: " + playerScore.getPlayer().getName());
+            log.info("Last Score:" + playerScore.lastScore());
+
+            playerScore.getFrames().forEach(basicFrame -> {
+                log.info("Number: " + basicFrame.getNumber());
+                log.info(basicFrame.getFirstRollScoreValue() + " -> " + basicFrame.getFirstRollScoreSymbol(10));
+                log.info(basicFrame.getSecondRollScoreValue() + " -> " + basicFrame.getSecondRollScoreSymbol(10, 10));
+                log.info(basicFrame.getThirdRollScoreValue() + " -> " + basicFrame.getThirdRollScoreSymbol(10, 10));
+            });
+        });
+
     }
 
 }

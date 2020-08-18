@@ -1,14 +1,12 @@
 package com.jobsity.challenge.bowling.model;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 @Getter
-@Setter
 public class PlayerScore<T extends BasicFrame> {
     private Player player;
     private List<T> frames;

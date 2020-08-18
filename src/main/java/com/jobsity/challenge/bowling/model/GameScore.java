@@ -1,13 +1,11 @@
 package com.jobsity.challenge.bowling.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 public class GameScore {
     private final LocalDateTime processingDate;
     private final String fileName;
