@@ -1,0 +1,7 @@
+test01 ->TwoPlayers CeroScore
+test02 ->TwoPlayers PerfectScore
+test03 ->TwoPlayers NormalScore
+test04 ->TwoPlayers WrongData
+test05 ->TwoPlayers WrongStructure
+test06 ->TwoPlayers WrongData&Structure
+testJonSansa -> TwoPlayers NormalGame
