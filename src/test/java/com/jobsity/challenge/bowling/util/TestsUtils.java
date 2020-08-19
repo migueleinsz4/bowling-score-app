@@ -264,16 +264,16 @@ public class TestsUtils {
         PlayerScore<Frame> jonScore = new PlayerScore<>(
             new Player(1, playerOneName),
             Arrays.asList(
-                new Frame(1, 10, null, null, 10, 20, 30),
-                new Frame(2, 10, null, null, 10, 20, 60),
-                new Frame(3, 7, 3, null, 10, 5, 75),
-                new Frame(4, 5, 2, null, 7, 0, 82),
-                new Frame(5, 8, 0, null, 8, 0, 90),
-                new Frame(6, 4, 6, null, 10, 10, 110),
-                new Frame(7, 10, null, null, 10, 17, 127),
-                new Frame(8, 3, 4, null, 7, 0, 134),
-                new Frame(9, 0, 0, null, 0, 0, 134),
-                new Frame(10, 10, 4, 10, 10, 14, 158)
+                new Frame(1, -1, null, null, 10, 17, 27),
+                new Frame(2, 10, null, null, 10, 10, 47),
+                new Frame(3, 7, 3, null, 10, 5, 62),
+                new Frame(4, 5, 2, null, 7, 0, 69),
+                new Frame(5, 8, 0, null, 8, 0, 77),
+                new Frame(6, 4, 6, null, 10, 10, 97),
+                new Frame(7, 10, null, null, 10, 7, 114),
+                new Frame(8, 3, 4, null, 7, 0, 121),
+                new Frame(9, 0, 0, null, 0, 0, 121),
+                new Frame(10, 10, 4, 10, 10, 14, 135)
             )
         );
         PlayerScore<Frame> sansaScore = new PlayerScore<>(

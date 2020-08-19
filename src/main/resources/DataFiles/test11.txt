@@ -1,0 +1,78 @@
+Jon	10
+Sansa	0
+Sansa	4
+Jeff	10
+Mary	0
+Mary	4
+Jon	10
+Sansa	5
+Sansa	0
+Jeff	10
+Mary	5
+Mary	0
+Jon	7
+Jon	3
+Sansa	0
+Sansa	2
+Jeff	7
+Jeff	3
+Mary	0
+Mary	2
+Jon	5
+Jon	2
+Sansa	5
+Sansa	5
+Jeff	5
+Jeff	2
+Mary	5
+Mary	5
+Jon	8
+Jon	0
+Sansa	10
+Jeff	8
+Jeff	0
+Mary	10
+Jon	4
+Jon	6
+Sansa	10
+Jeff	4
+Jeff	6
+Mary	10
+Jon	10
+Sansa	10
+Jeff	10
+Mary	10
+Jon	3
+Jon	4
+Sansa	5
+Sansa	5
+Jeff	3
+Jeff	4
+Mary	5
+Mary	5
+Jon	0
+Jon	0
+Sansa	3
+Sansa	7
+Jeff	0
+Jeff	0
+Mary	3
+Mary	7
+Jon	10
+Jon	4
+Jon	10
+Sansa	9
+Sansa	0
+Jeff	10
+Jeff	4
+Jeff	10
+Mary	9
+Mary	0
+
+
+
+
+
+
+
+

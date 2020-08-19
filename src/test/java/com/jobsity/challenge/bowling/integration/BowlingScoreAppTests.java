@@ -133,4 +133,5 @@ public class BowlingScoreAppTests {
         GameScore gameScore = this.scoringEngineService.processResultData(gameResult);
         logGameScore(gameScore);
     }
+
 }
