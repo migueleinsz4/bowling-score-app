@@ -68,11 +68,3 @@ Jeff	4
 Jeff	10
 Mary	9
 Mary	0
-
-
-
-
-
-
-
-

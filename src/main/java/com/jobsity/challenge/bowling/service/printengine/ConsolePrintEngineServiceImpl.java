@@ -6,7 +6,6 @@ import com.jobsity.challenge.bowling.model.PlayerScore;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import java.util.Objects;
 
 @CommonsLog
 @Service
